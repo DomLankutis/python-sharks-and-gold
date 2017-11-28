@@ -3,14 +3,25 @@ clear = lambda: os.system('clear')
 
 ROW = 51
 COL = 51
+
 # Gold pos number of gold and its (X, Y) Position
-goldPos = [[10, 10], [3, 7], [14, 28]]
-sharkPos = [[17,1], [43, 30]]
+goldPos = []
+for i in range(random.randint(5,20)):
+    temp = []
+    temp.append(random.randint(1,ROW-1))
+    temp.append(random.randint(1,COL-1))
+    goldPos.append(temp)
+
+sharkPos = []
+for i in range(random.randint(1,8)):
+    temp = []
+    temp.append(random.randint(1,ROW-1))
+    temp.append(random.randint(1,COL-1))
+    sharkPos.append(temp)
 
 prevChoice = 0
-'''
-Create a 2D plain and make a character move in such plane
-'''
+
+
 class Grid():
 
     def create(self, arr):
@@ -93,16 +104,20 @@ def main():
                         clear()
                         print('\n\n\t\t\tGAME OVER')
                         time.sleep(10); exit()
+
+                if len(goldPos) == 0:
+                    clear()
+                    print('\n\n\t\t\tYOU WIN')
+                    time.sleep(10); exit()
                 break
             except:
                 pass
-
 
         time.sleep(0.03)
         arrGrid = []
         grid.update(arrGrid, X, Y)
         print("Gold Points: {}".format(goldPoints))
+        print("Gold Left: {}".format(len(goldPos)))
         print('X: {} Y: {}'.format(X, Y))
-        print('Shark Pos: {}'.format(sharkPos))
 
 main()
