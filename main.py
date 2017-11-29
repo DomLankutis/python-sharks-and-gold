@@ -6,21 +6,21 @@ ROW = 51
 COL = 51
 # Gold pos number of gold and its (X, Y) Position
 goldPos = []
-for i in range(random.randint(5,20)):
+for i in range(random.randint(5, 20)):
     temp = []
-    temp.append(random.randint(1,ROW-1))
-    temp.append(random.randint(1,COL-2))
+    temp.append(random.randint(1, ROW-1))
+    temp.append(random.randint(1, COL-2))
     goldPos.append(temp)
 
 sharkPos = []
-for i in range(random.randint(1,8)):
+for i in range(random.randint(1, 8)):
     temp = []
-    temp.append(random.randint(1,ROW-1))
-    temp.append(random.randint(1,COL-2))
+    temp.append(random.randint(1, ROW-1))
+    temp.append(random.randint(1, COL-2))
     sharkPos.append(temp)
 
 prevChoice = 0
-
+step = 0
 
 class Grid():
 
@@ -38,7 +38,10 @@ class Grid():
 
     def update(self, arr, x, y):
         self.create(arr)
+
         global prevChoice
+        global step
+
         clear()
         for gold in range(len(goldPos)):
             arr[goldPos[gold][1]][goldPos[gold][0]] = colored('G', 'white', 'on_yellow')
@@ -47,17 +50,23 @@ class Grid():
 
             choice = random.randint(0, 4)
             prevChoice = choice
-            if choice == 0:
-                if 1 < sharkPos[pos][0]: sharkPos[pos][0] -= 1
-            if choice == 1:
-                if len(arr[0]) - 2 > sharkPos[pos][0]: sharkPos[pos][0] += 1
-            if choice == 2:
-                if 1 < sharkPos[pos][1]: sharkPos[pos][1] -= 1
-            if choice == 3:
-                if len(arr[0]) - 2 > sharkPos[pos][1]: sharkPos[pos][1] += 1
+            if step == 5:
+                if x + 1 <= sharkPos[pos][0]:
+                    if 1 < sharkPos[pos][0]: sharkPos[pos][0] -= 1 # X, Move left
+
+                if x - 1 >= sharkPos[pos][0]:
+                    if len(arr[0]) - 2 > sharkPos[pos][0]: sharkPos[pos][0] += 1 # X, Move right
+
+                if y + 1 <= sharkPos[pos][1]:
+                    if 1 < sharkPos[pos][1]: sharkPos[pos][1] -= 1  # Y, Move up
+
+                if y - 1 >= sharkPos[pos][1]:
+                    if len(arr[0]) - 2 > sharkPos[pos][1]: sharkPos[pos][1] += 1 # Y, Move down
 
             arr[sharkPos[pos][1]][sharkPos[pos][0]] = colored('S', 'white', 'on_blue');
-
+        # Reset the step count so in 20 frames the sharks can move again
+        if step >= 5:
+            step = 0
         arr[y][x] = colored('*', 'white', 'on_red')
         for i in arr:
             for j in i:
@@ -69,6 +78,8 @@ arr = []
 
 
 def main():
+
+    global step
     goldPoints = 0
 
     grid = Grid()
@@ -110,7 +121,8 @@ def main():
             except:
                 pass
 
-        time.sleep(0.03)
+        step += 1
+        time.sleep(0.04)
         arrGrid = []
         grid.update(arrGrid, X, Y)
         print("Gold Points: {}".format(goldPoints))
